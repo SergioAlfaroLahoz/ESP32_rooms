@@ -4,8 +4,6 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 
-#include "mqtt_config.h"
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -34,7 +32,7 @@ void reconnect()
 		clientId += String(random(0xffff), HEX);
 
 		// Try to connect
-		if (client.connect(clientId.c_str(),mqtt_user,mqtt_pass)) {
+		if (client.connect(clientId.c_str())) {
 			Serial.println("Connected!");
 			// Subscribe
 			if(client.subscribe(root_topic_subscribe)){

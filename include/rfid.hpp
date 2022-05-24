@@ -28,12 +28,16 @@ class RFID{
         byte userAnt[USERLENGTH];
 
         //Claves validas
-        byte validKey1[4] = {0x47, 0xB9, 0x5F, 0x40};  //Ejemplo de clave valida
-        byte validKey2[4] = {0xA7, 0xF3, 0x87, 0x40};
+        byte validKey1[4] = {0xAB, 0x26, 0xF7, 0x20};  //Ejemplo de clave valida
+        byte validKey2[4] = {0x7B, 0xC4, 0xC6, 0x21};
+        byte validKey3[4] = {0xCB, 0x0D, 0x11, 0x21};
+        byte validKey4[4] = {0x57, 0x3D, 0x13, 0x3E};
+        byte validKey5[4] = {0xA7, 0x95, 0x98, 0x40};
         
     public:
         RFID(){;}
         void init();
+        bool readCard();
         byte * getUser() {return user;}
         void activateRec(); //The function sending to the MFRC522 the needed commands to activate the reception
         void clearInt(); //The function to clear the pending interrupt bits after interrupt serving routine

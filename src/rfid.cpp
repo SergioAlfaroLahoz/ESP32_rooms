@@ -13,14 +13,32 @@ void RFID::init(){
   byte readReg = mfrc522.PCD_ReadRegister(mfrc522.VersionReg);
   Serial.printf("RFID Ver: 0x%02x", readReg);
 
-  /*
-  * Allow the ... irq to be propagated to the IRQ pin
-  * For test purposes propagate the IdleIrq and loAlert
-  */
-  regVal = 0xA0; //rx irq
-  mfrc522.PCD_WriteRegister(mfrc522.ComIEnReg, regVal);
+  // /*
+  // * Allow the ... irq to be propagated to the IRQ pin
+  // * For test purposes propagate the IdleIrq and loAlert
+  // */
+  // regVal = 0xA0; //rx irq
+  // mfrc522.PCD_WriteRegister(mfrc522.ComIEnReg, regVal);
 
   Serial.printf("RFID initialized\n");
+}
+
+/**
+ * Read a simple card and store data on user
+ */
+bool RFID::readCard(){
+  if (mfrc522.PICC_IsNewCardPresent()){
+    if (mfrc522.PICC_ReadCardSerial())
+    {
+      Serial.print(F("Card UID:"));
+      printArray(mfrc522.uid.uidByte, mfrc522.uid.size);
+      memcpy(user, mfrc522.uid.uidByte, mfrc522.uid.size);
+      // Finalizar lectura actual
+      mfrc522.PICC_HaltA();
+      return true;
+    }
+  }
+  return false;
 }
 
 /**

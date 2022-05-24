@@ -3,18 +3,10 @@
 #include "WiFi_client.hpp"
 #include "MQTT_client.hpp"
 #include "rfid.hpp"
+#include "leds.hpp"
 
 RFID rfid;
-bool rfidInt = false;
-
-/**
- * MFRC522 interrupt serving routine
- */
-void IRAM_ATTR readCard(){ //Declarar en main para poder llamar a rf.read
-  //Serial.println("Interrupt");
-  rfidInt = true; //intentar leer tarjeta rfid dentro de la interrupcion
-  rfid.readUID(); //Modificar, optimizar interrupcion para que sea el menor tiempo posible (solo leer uid)
-}
+LEDs led;
 
 void setup() {
   disableCore0WDT();
@@ -29,12 +21,13 @@ void setup() {
   client.setCallback(callback);
 
   rfid.init();
-  pinMode(IRQ_PIN, INPUT_PULLUP); //setup the IRQ pin
-  attachInterrupt(digitalPinToInterrupt(IRQ_PIN), readCard, FALLING); //Activate the interrupt
+  led.init();
+
+  led.led1ON(GREEN);
+  delay(10);
 }
 
 void loop() {
-  rfid.activateRec(); //The receiving block needs regular retriggering
 
   if(!client.connected()){
     reconnect();
@@ -49,16 +42,25 @@ void loop() {
   //   delay(300);
   // }
 
-  if(rfidInt){
+  delay(500);
+
+  if(rfid.readCard()){
     delay(100);
-    rfidInt = false;
     if(rfid.validKey()){
       //TODO open door
+      led.led2BlinkLoop(GREEN);
       Serial.println("Door opened!");
+      if (client.connected()){
+        String str = "Hello";
+        str.toCharArray(msg,25);
+        client.publish(root_topic_publish,msg);
+        delay(300);
+      }
     }else{
+      led.led2BlinkLoop(RED);
       Serial.println("Incorrect user");
     }
   }
 
-  client.loop();
+  // client.loop();
 }
