@@ -8,6 +8,8 @@
 RFID rfid;
 LEDs led;
 
+int startTime;
+
 void setup() {
   disableCore0WDT();
   //disableCore1WDT(); //Only with espidf
@@ -25,6 +27,7 @@ void setup() {
 
   led.led1ON(GREEN);
   delay(10);
+  startTime = millis();
 }
 
 void loop() {
@@ -42,7 +45,25 @@ void loop() {
   //   delay(300);
   // }
 
-  delay(500);
+
+  // Temperature sensor lecture
+  if(millis()-startTime>10000){
+    String randomNum = String(random(20, 25));
+    randomNum.toCharArray(msg, 25);
+    client.publish(root_topic_publish, msg);
+    startTime = millis();
+  }
+  
+
+  //Check if there's any booking
+  if(booked==false){
+    led.led1ON(GREEN);
+  }else{
+    led.led1ON(RED);
+  }
+
+  //Change RFID valid key
+  rfid.setvalidKey(user);
 
   if(rfid.readCard()){
     delay(100);
@@ -53,7 +74,7 @@ void loop() {
       if (client.connected()){
         String str = "Hello";
         str.toCharArray(msg,25);
-        client.publish(root_topic_publish,msg);
+        client.publish(root_topic_publish, msg);
         delay(300);
       }
     }else{
@@ -62,5 +83,6 @@ void loop() {
     }
   }
 
-  // client.loop();
+  delay(20);
+  client.loop();
 }

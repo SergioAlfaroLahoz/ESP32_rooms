@@ -95,8 +95,7 @@ bool RFID::isEqualArray(byte* arrayA, byte* arrayB, int length){
  * Return true if user UID card is equal to users saved
  */
 bool RFID::validKey(){
-  if(isEqualArray(user, validKey1, USERLENGTH)) return true;
-  else if(isEqualArray(user, validKey2, USERLENGTH)) return true;
+  if(isEqualArray(user, bookingValidKey, USERLENGTH)) return true;
   else return false;
 }
 
@@ -139,7 +138,16 @@ void RFID::setUser(byte* newUser){
   memcpy(user, newUser, USERLENGTH);
 }
 
-void RFID::setvalidKey(byte* key){
-  memcpy(validKey1, key, USERLENGTH);
-  Serial.printf("Card UID: %02X %02X %02X %02X\n", validKey1[0], validKey1[1], validKey1[2], validKey1[3]);
+void RFID::setvalidKey(uint8_t usr){
+  if(usr==1){
+    memcpy(bookingValidKey, validKey1, USERLENGTH);
+  }else if(usr==2){
+    memcpy(bookingValidKey, validKey2, USERLENGTH);
+  }else if(usr==3){
+    memcpy(bookingValidKey, validKey3, USERLENGTH);
+  }else if(usr==4){
+    memcpy(bookingValidKey, validKey4, USERLENGTH);
+  }else if(usr==5){
+    memcpy(bookingValidKey, validKey5, USERLENGTH);
+  }
 }

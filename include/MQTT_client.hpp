@@ -10,6 +10,18 @@ PubSubClient client(espClient);
 char msg[25];
 long count=0;
 
+bool booked = false;
+uint8_t user = 0;
+
+const char *room1 = "room1";
+const char *room1user = "room1/user";
+
+const char *user1 = "user1";
+const char *user2 = "user2";
+const char *user3 = "user3";
+const char *user4 = "user4";
+const char *user5 = "user5";
+
 void callback(char* topic, byte* payload, unsigned int length)
 {
 	String incoming = "";
@@ -19,8 +31,28 @@ void callback(char* topic, byte* payload, unsigned int length)
 	for (int i = 0; i < length; i++) {
 		incoming += (char)payload[i];
 	}
-	incoming.trim();
 	Serial.println("Message -> " + incoming);
+
+	if(strcmp(topic, room1)==0){
+		if(incoming=="booked"){
+			booked = true;
+		}else if(incoming=="available"){
+			booked = false;
+		}
+	}else if(strcmp(topic, room1user)==0){
+		if(incoming=="user1"){
+			user = 1;
+		}else if(incoming=="user2"){
+			user = 2;
+		}else if(incoming=="user3"){
+			user = 3;
+		}else if(incoming=="user4"){
+			user = 4;
+		}else if(incoming=="user5"){
+			user = 5;
+		}
+	}
+	incoming.trim();
 }
 
 void reconnect()
@@ -36,10 +68,15 @@ void reconnect()
 			Serial.println("Connected!");
 			// Subscribe
 			if(client.subscribe(root_topic_subscribe)){
-        Serial.println("Subscription ok");
-      }else{
-        Serial.println("Subscription failed");
-      }
+        		Serial.println("Subscription 1 ok");
+      		}else{
+        		Serial.println("Subscription failed");
+      		}
+			if(client.subscribe(user_topic_subscribe)){
+        		Serial.println("Subscription 2 ok");
+      		}else{
+        		Serial.println("Subscription failed");
+      		}
 		} else {
 			Serial.print("Error -> ");
 			Serial.print(client.state());

@@ -28,7 +28,8 @@ class RFID{
         byte userAnt[USERLENGTH];
 
         //Claves validas
-        byte validKey1[4] = {0xAB, 0x26, 0xF7, 0x20};  //Ejemplo de clave valida
+        byte bookingValidKey[4] = {0xAB, 0x26, 0xF7, 0x20};
+        byte validKey1[4] = {0xAB, 0x26, 0xF7, 0x20};  //Valid key example
         byte validKey2[4] = {0x7B, 0xC4, 0xC6, 0x21};
         byte validKey3[4] = {0xCB, 0x0D, 0x11, 0x21};
         byte validKey4[4] = {0x57, 0x3D, 0x13, 0x3E};
@@ -48,7 +49,7 @@ class RFID{
         bool userPresent();
         bool cmpUsers();
         void setUser(byte* newUser);
-        void setvalidKey(byte* key);
+        void setvalidKey(uint8_t usr);
 };
 
 #endif
