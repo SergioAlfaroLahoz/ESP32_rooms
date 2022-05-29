@@ -13,8 +13,8 @@ long count=0;
 bool booked = false;
 uint8_t user = 0;
 
-const char *room1 = "room1";
-const char *room1user = "room1/user";
+const char *room1 = root_topic_subscribe;
+const char *room1user = user_topic_subscribe;
 
 const char *user1 = "user1";
 const char *user2 = "user2";

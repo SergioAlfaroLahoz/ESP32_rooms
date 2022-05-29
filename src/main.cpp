@@ -68,7 +68,6 @@ void loop() {
   if(rfid.readCard()){
     delay(100);
     if(rfid.validKey()){
-      //TODO open door
       led.led2BlinkLoop(GREEN);
       Serial.println("Door opened!");
       if (client.connected()){
